@@ -1,101 +1,153 @@
 from collections import UserDict
 
 
-class AddressBook(UserDict):
+class Field:
+    def __init__(self, value):
+        self.value = value
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
+class Phone(Field):
+    pass
+
+
+class Name(Field):
     pass
 
 
 class Record:
-    pass
+    def __init__(self, name: Name, phone: Phone):
+        self.name = name
+        self.phones = []
+        self.phones.append(phone)
+
+    def add_phone(self, phone: Phone):
+        self.phones.append(phone)
+
+    def delete_phone(self, phone):
+        for el in self.phones:
+            if phone == el.value:
+                self.phones.remove(el)
+                return
+        print("Error number")
+
+    def change_phone(self, old_phone, new_phone):
+        for number in self.phones:
+            print(number)
+            if old_phone == number.value:
+                new_phone = Phone(new_phone)
+                self.phones.remove(number)
+                self.add_phone(new_phone)
+                return
+        print("Error number")
+
+    def __str__(self):
+        return f'Name: {self.name} Phones: {", ".join([str(p) for p in self.phones if str(p) != ""])}'
 
 
-class Name:
-    pass
+class AddressBook(UserDict):
 
+    def add_record(self, args):
+        for contact_name in self.data:
+            if args.name == contact_name:
+                return print("Contact exist")
+        self.data[args.name] = args
 
-class Phone:
-    pass
-
-
-class Field:
-    pass
-
-
-def bot_assistant():
-    while True:
-        try:
-            answer = input('==> ').lower().strip()
-            if answer in exit_answer:
-                return print_answer(f"{exit_answer[3].capitalize()}!")
-            elif answer.startswith(OPERATIONS[0]):
-                add_contact(answer)
-            elif answer.startswith(OPERATIONS[1]):
-                change_contact(answer)
-            elif answer.startswith(OPERATIONS[2]):
-                show_contact(answer)
-            elif answer.startswith(OPERATIONS[3]):
-                print_answer()
-            elif answer.startswith(OPERATIONS[4]):
-                show_phone_book(answer)
-        except KeyboardInterrupt:
-            return print_answer(f"{exit_answer[3].capitalize()}!")
-
-
-def print_answer(txt='How can I help you?'):
-    print(txt)
+    def __str__(self):
+        result = "\n".join([str(v) for v in self.data.values()])
+        return result
 
 
 def input_error(func):
-    def inner(s):
+    def verification(args):
         try:
-            func(s)
-        except (KeyError, ValueError, IndexError, KeyboardInterrupt):
-            if KeyError or ValueError or IndexError:
-                print_answer('Write correct value:')
+            user_command = [args.split(" ")[0].lower()]
+            user_info = args.split(" ")[1:]
+            for el in user_info:
+                user_command.append(el)
+            if len(user_info) < 2:
+                user_command.append("")
+            verification_result = func(user_command)
+            return verification_result
+        except KeyError:
+            print("Invalid command please try again!")
+        except TypeError:
+            print("Invalid command please try again!")
+        except IndexError:
+            print("Invalid command please try again!")
+        except ValueError:
+            print("Invalid command please try again!")
 
-    return inner
-
-
-@input_error
-def add_contact(arr):
-    _, name, phone = arr.split(' ')
-    phone_book.update({name: phone})
-
-
-@input_error
-def change_contact(arr):
-    _, name = arr.split(' ')
-    if phone_book.get(name):
-        answer = input('new phone number =>> ')
-        phone_book.update({name: answer})
-    else:
-        print(f"Sorry,{name} can't find")
+    return verification
 
 
-@input_error
-def show_phone_book(_):
-    phoneBook = ''
-    for k, v in phone_book.items():
-        phoneBook += '| {name}: {value}'.format(name=k, value=v)
-
-    print_answer(phoneBook)
+CONTACT = AddressBook()
 
 
 @input_error
-def show_contact(arr):
-    _, name = arr.split(' ')
-    print_answer(phone_book.get(name))
+def handler(commands):
+
+    def new_user():
+        record = Record(Name(commands[1]), Phone(commands[2]))
+        CONTACT.add_record(record)
+
+    def change():
+        for name in CONTACT:
+            if str(name) == commands[1]:
+                new_phone = commands[3]
+                old_phone = commands[2]
+                CONTACT.data[name].change_phone(old_phone, new_phone)
+                return
+        print("Error name")
+
+    def hello():
+        print("Hello can I help you?")
+
+    def show_all():
+        print(CONTACT)
+
+    def delete_number():
+        for name in CONTACT:
+            print(str(name) == commands[1])
+            print(commands[2])
+            if str(name) == commands[1]:
+                CONTACT.data[name].delete_phone(commands[2])
+                return
+        print("Error name")
+
+    def add_more_number():
+        for name in CONTACT:
+            if str(name) == commands[1]:
+                CONTACT.data[name].add_phone(Phone(commands[2]))
+                return
+        print("Error name")
+
+    COMMAND = {
+        "hello": hello,
+        "add": new_user,
+        "show": show_all,
+        "delete": delete_number,
+        "more": add_more_number,
+        "change": change
+    }[commands[0]]()
+
+    return
 
 
-OPERATIONS = [
-    'add',
-    'change',
-    'phone',
-    'hello',
-    'show all'
-]
-exit_answer = ['.', 'close', 'exit', 'good bye']
-phone_book = {}
+def main():
+    print("You are Wellcome!")
+    while True:
+        user_input = input('==> ')
+        if user_input in ["exit", "close", "good bye", "."]:
+            break
+        handler(user_input)
+    print("Good bye!")
 
-if __name__ == '__main__':
-    bot_assistant()
+
+if __name__ == "__main__":
+    main()
