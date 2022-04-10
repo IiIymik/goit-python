@@ -1,7 +1,7 @@
 from collections import UserDict
 from datetime import datetime
+import os
 import pickle
-import json
 
 
 class Field:
@@ -102,7 +102,7 @@ class Record:
 
 
 class AddressBook(UserDict):
-    
+        
     def add_record(self, args):
         for contact_name in self.data:
             if args.name == contact_name:
@@ -129,6 +129,25 @@ class AddressBook(UserDict):
         result = "\n".join([str(v) for v in self.data.values()])
         return result
 
+    def save(self, file_path):
+        try:
+            file_dump = open(file_path, 'wb')
+            pickle.dump(CONTACT, file_dump)
+            file_dump.close()
+            print('Save in contact_book.dat')
+        except FileNotFoundError:
+            print(FileNotFoundError)
+
+
+    def load(self, file_path):
+        try:
+            global CONTACT
+            file = open('contact_book.dat', 'rb')
+            CONTACT = pickle.load(file)
+            file.close()
+        except FileNotFoundError:
+            print(FileNotFoundError)
+
 
 def input_error(func):
     def verification(args):
@@ -154,17 +173,11 @@ def input_error(func):
             print("No more contacts")
     return verification
 
-
-#file open or create new
-try:
-    file = open('contact_book.dat', 'rb')
-    CONTACT = pickle.load(file)
-    file.close()
-except FileNotFoundError:
-    CONTACT = AddressBook()
+# CONTACT = AddressBook()    
 
 @input_error
 def handler(commands):
+    
     def new_user():
         phon = Phone()
         phon.values = commands[2]
@@ -229,21 +242,19 @@ def handler(commands):
         "more": add_more_number
     }[commands[0]]()
     return
-    
+
     
 def main():
-    print("You are Wellcome!")
+    global CONTACT
+    CONTACT = AddressBook()
+    CONTACT.load('contact_book.dat')
     while True:
         user_input = input('==>> ')
         if user_input in ["exit", "close", "good bye", '.']:
-            file_dump = open('contact_book.dat', 'wb')
-            pickle.dump(CONTACT, file_dump)
-            file_dump.close()
-            print('Save in contact_book.dat')
+            CONTACT.save('contact_book.dat')
             break
         handler(user_input)
     print("\nGood bye!")
-
 
 if __name__ == "__main__":
     main()
