@@ -1,0 +1,174 @@
+"""
+    Please select any command from listed below with examples:
+
+    add
+        Adding new contact.
+        Examples:
+            add Sasha
+            add Pasha Petrenko
+            add Semen Semenovich Semenchuk
+
+    add address
+        Adding an address for the contact with the name specified.
+        Examples:
+            add address Pasha Petrenko <Press ENTER>
+            Enter you address >>> Kyiv, Nauki, 3, ap. 5 <Press ENTER>
+
+    add birthday
+        Adding a date of birth in the DD.MM.YYYY format for the contact
+        with the name specified.
+        Examples:
+            add birthday Sasha 01.05.1985
+            add birthday Pasha Petrenko 01.05.1985
+
+    add email
+        Adding an email for the contact with the name specified.
+        Examples:
+            add email Sasha sania.kyiv@example.com
+            add email Pasha Petrenko p.petrenko@example.com
+
+    add note
+        Adding a text note.
+        Examples:
+            add note This is the text of the note. 
+
+    add phone
+        Adding a phone number in the (0XX)XXX-XX-XX format for the contact
+        with the name specified.
+        Examples:
+            add phone Sasha (050)555-55-55
+            add phone Pasha Petrenko (093)333-33-33
+
+    change address
+        Changing address for the contact with the name specified.
+        Examples:
+            change address Pasha Petrenko <Press ENTER>
+            Enter you address >>> Lviv, Shevchenka, 102 <Press ENTER>
+
+    change birthday
+        Changing date of birth in the DD.MM.YYYY format for the contact with
+        the name specified.
+        Examples:
+            change birthday Sasha 02.05.1985
+            change birthday Pasha Petrenko 02.05.1985
+
+    change email
+        Changing email for the contact with the name specified.
+        Examples:
+            change email Sasha alex.lviv@example.com
+            change email Pasha Petrenko pasha.petrenko@i.ua
+
+    change note
+        Changing text of a note identified with its date and time.
+        To see the exact note ID you may use the 'find note' command.
+        Examples:
+            change note 21.04.2022 - 19:17:21 New text of the note.
+
+    change phone
+        Changing phone number for the contact with the name specified.
+        Format of the command: change phone <name> <old phone> <new phone>
+        Examples:
+            change phone Sasha (050)555-55-55 (095)444-44-44
+            change phone Pasha Petrenko (093)333-33-33 (067)777-77-77
+    
+    clean
+        Ordering files in a specified folder, where documents, images, videos and
+        other known file types are being moved into coresponding automatically
+        created folders.
+        Examples:
+            clean d:\MyFiles
+
+    close
+        Exit.
+
+    coming birthday
+        Displaying all the contacts with date of birth within the specified
+        number of days starting from today.
+        If the number of days is not specified, the default value is 7.
+        Examples:
+            All contacts whose birthday is tommorrow:
+                coming birthday 1
+            All contacts whose birthday is during next seven days:
+                coming birthday
+
+    delete address
+        Deleting address for the contact with the name specified.
+        Examples:
+            delete address Sasha
+            delete address Pasha Petrenko
+
+    delete birthday
+        Deleting date of birth for the contact with the name specified.
+        Examples:
+            delete birthday Sasha
+            delete birthday Pasha Petrenko
+
+    delete email
+        Deleting email for the contact with the name specified.
+        Examples:
+            delete email Sasha
+            delete email Pasha Petrenko
+
+    delete note
+        Deleting note identified with its date and time.
+        To see the exact note ID you may use the 'find note' command.
+        Examples:
+            delete note 21.04.2022 - 19:17:21
+
+    delete phone
+        Deleting phone number for the contact with the name specified.
+        Examples:
+            delete phone Sasha (050)555-55-55
+            delete phone Pasha Petrenko (093)333-33-33
+
+    exit
+        Exit.
+
+    find note
+        Searching notes (optionally) with a keyword specified (case insensitive)  
+        (optionally) starting from the date specified in the DD.MM.YYYY format and 
+        (optionally) up to the date specified in the DD.MM.YYYY format.
+        Examples:
+            Show all the notes:
+                find note
+            Show all the notes with the substring 'bill', 'BILL', 'Bill', 'bIll' etc.:
+                find note bill
+            Show all the notes with the substring 'bill', 'BILL', 'Bill', 'bIll' etc.
+            starting from 01.01.2022:
+                find note bill 01.01.2022
+            Show all the notes with the substring 'bill', 'BILL', 'Bill', 'bIll' etc.
+            starting from 01.01.2022 up to 10.01.2022:
+                find note bill 01.01.2022 10.01.2022
+            Find notes by a tag:
+                find note #my_tag
+
+    good bye
+        Exit.
+
+    help
+        Displaying this help.
+
+    remove
+        Removing a record for the contact with the name specified.
+        Examples:
+            remove Sasha
+            remove Pasha Petrenko
+
+    save
+        Saving the contacts book to the contacts.bin file.
+    
+    search
+        Searching of contacts matching to the specified search string (case insensitive).
+        Examples:
+            search john
+            search akademika glushkova
+
+    show all
+        Displaying content of the contacts book.
+
+    tag note
+        Tagging specified note with a hashtag in #tag format.
+        Examples:
+            tag note 01.01.2022 10.01.2022 my_hashtag
+
+    """
