@@ -1,0 +1,15 @@
+FROM python:latest
+
+COPY . /WEB-HW-3 
+WORKDIR /WEB-HW-3
+
+RUN pip install pipenv
+
+COPY Pipfile Pipfile
+COPY Pipfile.lock Pipfile.lock
+
+RUN pipenv install --system --deploy
+
+
+ENTRYPOINT ["python"]
+CMD ["personal_helper.py"]
