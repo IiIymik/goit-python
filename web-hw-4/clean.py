@@ -8,7 +8,7 @@ VIDEO_TYPE = ['avi', 'mp4', 'mov', 'mkv']
 AUDIO_TYPE = ['mp3', 'ogg', 'wav', 'amr']
 DOCUMENTS_TYPE = ['doc', 'docx', 'txt', 'pdf', 'xlsx', 'pptx']
 ARCHIVES_TYPE = ['zip', 'gz', 'tar']
-FOLDER_EXEPTION = ['image', 'video', 'audio', 'documents', 'archives']
+FOLDER_EXEPTION = ['image', 'video', 'audio', 'documents', 'archives','other']
 
 CYRILLIC = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
 LATIN = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
@@ -34,33 +34,38 @@ class SortingThread(Thread):
 
     def run(self):
         
-        for name in self.files:
+        for n in self.files:
 
-                file_name = name.split('.')
-                new_file_name = normalize(file_name[0], file_name[1])
-                
-                if file_name[1] in IMAGES_TYPE:
-                    create_folder_and_replace_file(self.base_folder, FOLDER_EXEPTION[0], self.root, name, new_file_name)
-                elif file_name[1] in VIDEO_TYPE:
-                    create_folder_and_replace_file(self.base_folder, FOLDER_EXEPTION[1], self.root, name, new_file_name)
-                elif file_name[1] in AUDIO_TYPE:
-                    create_folder_and_replace_file(self.base_folder, FOLDER_EXEPTION[2], self.root, name, new_file_name)
-                elif file_name[1] in DOCUMENTS_TYPE:
-                    create_folder_and_replace_file(self.base_folder, FOLDER_EXEPTION[3], self.root, name, new_file_name)
-                elif file_name[1] in ARCHIVES_TYPE:
-                    create_folder_and_replace_file(self.base_folder, FOLDER_EXEPTION[4], self.root, name, new_file_name)
-                    
-                    shutil.unpack_archive(f'{self.base_folder}\\archives\\{new_file_name}',
-                                        f'{self.base_folder}\\archives\\{file_name[0]}')
-                    os.remove(f'{self.base_folder}\\{FOLDER_EXEPTION[4]}\\{new_file_name}')
-                else:
-                    create_folder_and_replace_file(self.base_folder, 'other', self.root, name, new_file_name)
- 
+            file_name, ext = n.split('.')
+            new_file_name = normalize(file_name, ext)
+            
+            if ext in IMAGES_TYPE:
+                replace_file(f'{self.root}\\{n}',f'{self.base_folder}\\{FOLDER_EXEPTION[0]}\\{new_file_name}' )
+            elif ext in VIDEO_TYPE:
+                replace_file(f'{self.root}\\{n}',f'{self.base_folder}\\{FOLDER_EXEPTION[1]}\\{new_file_name}' )
+            elif ext in AUDIO_TYPE:
+                replace_file(f'{self.root}\\{n}',f'{self.base_folder}\\{FOLDER_EXEPTION[2]}\\{new_file_name}' )
+            elif ext in DOCUMENTS_TYPE:
+                replace_file(f'{self.root}\\{n}',f'{self.base_folder}\\{FOLDER_EXEPTION[3]}\\{new_file_name}' )
+            elif ext in ARCHIVES_TYPE:
+                replace_file(f'{self.root}\\{n}',f'{self.base_folder}\\{FOLDER_EXEPTION[4]}\\{new_file_name}' )
+                shutil.unpack_archive(f'{self.base_folder}\\archives\\{new_file_name}',
+                                    f'{self.base_folder}\\archives\\{ext}')
+                os.remove(f'{self.base_folder}\\{FOLDER_EXEPTION[4]}\\{new_file_name}')
+            else:
+                replace_file(f'{self.root}\\{n}',f'{self.base_folder}\\{FOLDER_EXEPTION[5]}\\{new_file_name}' )
+
+def create_folder(base_folder):
+    for folder_name in FOLDER_EXEPTION:
+        if not os.path.exists(fr'{base_folder}\\{folder_name}'):
+            os.mkdir(f'{base_folder}\\{folder_name}') 
 
 def main(base_folder):
 
+    create_folder(base_folder)
+
     for root, dirs, files in os.walk(base_folder):
-        
+   
         if os.path.basename(root) in FOLDER_EXEPTION:
             return
         else:
@@ -72,7 +77,7 @@ def main(base_folder):
 
 def delete_empty_folder(base_folder):
     try:
-        for root, dirs, files in os.walk(base_folder):
+        for root in os.walk(base_folder):
             if os.listdir(root):
                 continue
             else:
@@ -83,12 +88,9 @@ def delete_empty_folder(base_folder):
         return
 
 
-def create_folder_and_replace_file(base_folder, folder_name, root, name, new_file_name):
-    if os.path.isdir(f'{base_folder}\\{folder_name}'):
-        os.replace(f'{root}\\{name}', f'{base_folder}\\{folder_name}\\{new_file_name}')
-    else:
-        os.mkdir(f'{base_folder}\\{folder_name}')
-        os.replace(f'{root}\\{name}', f'{base_folder}\\{folder_name}\\{new_file_name}')
+def replace_file(source,destination):
+    os.replace(source, destination)
+
 
 
 def normalize(file_name, file_extension):
